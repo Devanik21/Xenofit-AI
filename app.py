@@ -149,7 +149,9 @@ if st.button("Generate Workout Plan"):
     if not api_key:
         st.error("Please enter your Gemini API key in the sidebar")
     else:
-    with st.spinner("Creating your personalized workout with AI..."):
+        with st.spinner("Creating your personalized workout with AI..."):
+        
+    
         # Generate workout using LLM
         workout_plan = generate_workout_with_llm(workout_category, workout_type, fitness_level, workout_duration)
         
