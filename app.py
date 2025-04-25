@@ -12,12 +12,10 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # --- Gemini API Configuration ---
-# Replace with your actual API key
-GOOGLE_API_KEY = "YOUR_GEMINI_API_KEY"
-genai.configure(api_key=GOOGLE_API_KEY)
+# API key will be entered via sidebar
 
 # Initialize Gemini model
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 # --- Page Config ---
 st.set_page_config(page_title="Holistic Fitness Hub", layout="wide")
@@ -28,6 +26,12 @@ st.sidebar.title("⚙️ Settings")
 user_name = st.sidebar.text_input("Your Name", value="Fitness Enthusiast")
 fitness_level = st.sidebar.select_slider("Fitness Level", options=["Beginner", "Intermediate", "Advanced"])
 workout_duration = st.sidebar.slider("Workout Duration (minutes)", min_value=5, max_value=60, value=15, step=5)
+
+# API Key input
+st.sidebar.title("🔑 API Settings")
+api_key = st.sidebar.text_input("Gemini API Key", type="password")
+if api_key:
+    genai.configure(api_key=api_key)
 
 # --- Workout Categories ---
 categories = {
@@ -142,6 +146,9 @@ workout_type = st.selectbox("Select Type", workout_types)
 
 # Generate Button
 if st.button("Generate Workout Plan"):
+    if not api_key:
+        st.error("Please enter your Gemini API key in the sidebar")
+    else:
     with st.spinner("Creating your personalized workout with AI..."):
         # Generate workout using LLM
         workout_plan = generate_workout_with_llm(workout_category, workout_type, fitness_level, workout_duration)
