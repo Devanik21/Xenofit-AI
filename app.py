@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 # API key will be entered via sidebar
 
 # Initialize Gemini model
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 # --- Page Config ---
 st.set_page_config(page_title="Holistic Fitness Hub", layout="wide")
