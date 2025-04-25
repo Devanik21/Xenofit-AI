@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 # API key will be entered via sidebar
 
 # Initialize Gemini model
-model = genai.GenerativeModel('gemini-2.0-flash')
+model = genai.GenerativeModel('gemini-pro')
 
 # --- Page Config ---
 st.set_page_config(page_title="Holistic Fitness Hub", layout="wide")
@@ -150,8 +150,7 @@ if st.button("Generate Workout Plan"):
         st.error("Please enter your Gemini API key in the sidebar")
     else:
         with st.spinner("Creating your personalized workout with AI..."):
-        
-    
+    with st.spinner("Creating your personalized workout with AI..."):
         # Generate workout using LLM
         workout_plan = generate_workout_with_llm(workout_category, workout_type, fitness_level, workout_duration)
         
@@ -268,6 +267,10 @@ with st.expander("AI Fitness Advisor"):
     user_question = st.text_input("Your Question")
     
     if st.button("Get AI Advice") and user_question:
+        if not api_key:
+            st.error("Please enter your Gemini API key in the sidebar")
+        else:
+            with st.spinner("Generating advice..."):
         with st.spinner("Generating advice..."):
             try:
                 fitness_prompt = f"As a fitness expert, please answer this question: {user_question}"
