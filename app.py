@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 model = genai.GenerativeModel('gemini-2.0-flash')
 
 # --- Page Config ---
-st.set_page_config(page_title="Holistic Fitness Hub", layout="wide")
+st.set_page_config(page_title="Holistic Fitness Hub", layout="wide",page_icon="🏋🏻")
 st.title("🧘 Holistic Fitness Hub")
 
 # --- Sidebar ---
