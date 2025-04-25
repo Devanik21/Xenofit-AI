@@ -150,91 +150,90 @@ if st.button("Generate Workout Plan"):
         st.error("Please enter your Gemini API key in the sidebar")
     else:
         with st.spinner("Creating your personalized workout with AI..."):
-    with st.spinner("Creating your personalized workout with AI..."):
-        # Generate workout using LLM
-        workout_plan = generate_workout_with_llm(workout_category, workout_type, fitness_level, workout_duration)
-        
-        if workout_plan:
-            st.success("Your AI-generated workout plan is ready!")
+            # Generate workout using LLM
+            workout_plan = generate_workout_with_llm(workout_category, workout_type, fitness_level, workout_duration)
             
-            # Display workout plan
-            st.subheader("Your Personalized Workout Plan")
-            
-            # Tabs for different views
-            tab1, tab2, tab3 = st.tabs(["Exercise List", "Guided Workout", "Audio Instructions"])
-            
-            with tab1:
-                for i, exercise in enumerate(workout_plan, 1):
-                    with st.expander(f"{i}. {exercise['name']} ({exercise['duration']} seconds)"):
-                        st.write(exercise["description"])
-            
-            with tab2:
-                st.write("Follow along with the timer:")
+            if workout_plan:
+                st.success("Your AI-generated workout plan is ready!")
                 
-                # Create workout instructions
-                workout_instructions = f"Welcome to your {workout_duration} minute {workout_type} workout. "
-                workout_instructions += f"This {fitness_level.lower()} level workout includes {len(workout_plan)} exercises. Let's begin!\n\n"
+                # Display workout plan
+                st.subheader("Your Personalized Workout Plan")
                 
-                for i, exercise in enumerate(workout_plan, 1):
-                    workout_instructions += f"Exercise {i}: {exercise['name']} for {exercise['duration']} seconds. {exercise['description']}.\n"
-                    if i < len(workout_plan):
-                        workout_instructions += "Then rest for 15 seconds.\n\n"
+                # Tabs for different views
+                tab1, tab2, tab3 = st.tabs(["Exercise List", "Guided Workout", "Audio Instructions"])
                 
-                workout_instructions += f"\nCongratulations on completing your {workout_type} workout!"
+                with tab1:
+                    for i, exercise in enumerate(workout_plan, 1):
+                        with st.expander(f"{i}. {exercise['name']} ({exercise['duration']} seconds)"):
+                            st.write(exercise["description"])
                 
-                st.write(workout_instructions)
-                
-                # Interactive timer option
-                if st.button("Start Guided Workout"):
-                    progress_bar = st.progress(0)
-                    status_text = st.empty()
+                with tab2:
+                    st.write("Follow along with the timer:")
                     
-                    total_duration = sum(ex["duration"] for ex in workout_plan) + (len(workout_plan) - 1) * 15
-                    time_elapsed = 0
+                    # Create workout instructions
+                    workout_instructions = f"Welcome to your {workout_duration} minute {workout_type} workout. "
+                    workout_instructions += f"This {fitness_level.lower()} level workout includes {len(workout_plan)} exercises. Let's begin!\n\n"
                     
-                    current_exercise = 0
-                    in_rest = False
-                    rest_time = 0
+                    for i, exercise in enumerate(workout_plan, 1):
+                        workout_instructions += f"Exercise {i}: {exercise['name']} for {exercise['duration']} seconds. {exercise['description']}.\n"
+                        if i < len(workout_plan):
+                            workout_instructions += "Then rest for 15 seconds.\n\n"
                     
-                    # This would normally be a loop with actual timing
-                    # For this example, we'll just update the progress bar quickly
-                    while current_exercise < len(workout_plan):
-                        if not in_rest:
-                            # Exercise period
-                            exercise = workout_plan[current_exercise]
-                            status_text.write(f"Now: {exercise['name']} - {exercise['description']}")
-                            
-                            # Simulate exercise time passing
-                            for _ in range(exercise["duration"]):
-                                time.sleep(0.01)  # Speed up for demo
-                                time_elapsed += 1
-                                progress_bar.progress(time_elapsed / total_duration)
-                            
-                            if current_exercise < len(workout_plan) - 1:
-                                in_rest = True
+                    workout_instructions += f"\nCongratulations on completing your {workout_type} workout!"
+                    
+                    st.write(workout_instructions)
+                    
+                    # Interactive timer option
+                    if st.button("Start Guided Workout"):
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
+                        
+                        total_duration = sum(ex["duration"] for ex in workout_plan) + (len(workout_plan) - 1) * 15
+                        time_elapsed = 0
+                        
+                        current_exercise = 0
+                        in_rest = False
+                        rest_time = 0
+                        
+                        # This would normally be a loop with actual timing
+                        # For this example, we'll just update the progress bar quickly
+                        while current_exercise < len(workout_plan):
+                            if not in_rest:
+                                # Exercise period
+                                exercise = workout_plan[current_exercise]
+                                status_text.write(f"Now: {exercise['name']} - {exercise['description']}")
+                                
+                                # Simulate exercise time passing
+                                for _ in range(exercise["duration"]):
+                                    time.sleep(0.01)  # Speed up for demo
+                                    time_elapsed += 1
+                                    progress_bar.progress(time_elapsed / total_duration)
+                                
+                                if current_exercise < len(workout_plan) - 1:
+                                    in_rest = True
+                                else:
+                                    current_exercise += 1
                             else:
+                                # Rest period
+                                status_text.write("REST")
+                                
+                                # Simulate rest time passing
+                                for _ in range(15):
+                                    time.sleep(0.01)  # Speed up for demo
+                                    time_elapsed += 1
+                                    progress_bar.progress(time_elapsed / total_duration)
+                                
+                                in_rest = False
                                 current_exercise += 1
-                        else:
-                            # Rest period
-                            status_text.write("REST")
-                            
-                            # Simulate rest time passing
-                            for _ in range(15):
-                                time.sleep(0.01)  # Speed up for demo
-                                time_elapsed += 1
-                                progress_bar.progress(time_elapsed / total_duration)
-                            
-                            in_rest = False
-                            current_exercise += 1
-                    
-                    status_text.write("Workout complete! Great job!")
-                    progress_bar.progress(1.0)
-            
-            with tab3:
-                st.write("Audio Instructions for your workout:")
-                get_audio_button(workout_instructions)
-        else:
-            st.error("Couldn't generate workout plan. Please try different options or check your API key.")
+                        
+                        status_text.write("Workout complete! Great job!")
+                        progress_bar.progress(1.0)
+                
+                with tab3:
+                    st.write("Audio Instructions for your workout:")
+                    get_audio_button(workout_instructions)
+            else:
+                st.error("Couldn't generate workout plan. Please try different options or check your API key.")
 
 # --- Additional Features ---
 st.subheader("Additional Tools")
@@ -271,13 +270,12 @@ with st.expander("AI Fitness Advisor"):
             st.error("Please enter your Gemini API key in the sidebar")
         else:
             with st.spinner("Generating advice..."):
-        with st.spinner("Generating advice..."):
-            try:
-                fitness_prompt = f"As a fitness expert, please answer this question: {user_question}"
-                advice_response = model.generate_content(fitness_prompt)
-                st.write(advice_response.text)
-            except Exception as e:
-                st.error(f"Error generating advice: {str(e)}")
+                try:
+                    fitness_prompt = f"As a fitness expert, please answer this question: {user_question}"
+                    advice_response = model.generate_content(fitness_prompt)
+                    st.write(advice_response.text)
+                except Exception as e:
+                    st.error(f"Error generating advice: {str(e)}")
 
 # Progress Tracker
 with st.expander("Progress Tracker"):
